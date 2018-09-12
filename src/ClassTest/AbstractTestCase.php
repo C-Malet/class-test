@@ -152,4 +152,31 @@ abstract class AbstractTestCase extends TestCase
 
         return $dummy;
     }
+
+    /**
+     * @param callable $callable
+     * @param string $exceptionClass
+     * @param int $exceptionCode
+     * @param string $exceptionMessage
+     */
+    protected function assertCallableThrowsException(callable $callable, $exceptionClass, $exceptionCode = null, $exceptionMessage = null)
+    {
+        try {
+            $callable();
+        } catch (\Exception $exception) {
+            $this->assertInstanceOf($exceptionClass, $exception);
+
+            if ($exceptionCode !== null) {
+                $this->assertEquals($exceptionCode, $exception->getCode());
+            }
+
+            if ($exceptionMessage !== null) {
+                $this->assertContains($exceptionMessage, $exception->getMessage());
+            }
+
+            return;
+        }
+
+        $this->fail('Expected ' . $exceptionClass . ' but no exception was thrown');
+    }
 }
