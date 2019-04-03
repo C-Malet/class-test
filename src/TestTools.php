@@ -6,6 +6,7 @@ use ClassTest\Exception\NotProphesizableException;
 use Prophecy\Argument;
 use Prophecy\Prophecy\MethodProphecy;
 use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\Assert;
 
 /**
  * Class TestTools
@@ -130,5 +131,34 @@ class TestTools
         } catch (\ReflectionException $exception) {
             throw new NotProphesizableException();
         }
+    }
+
+    /**
+     * Allow multiple exception assertions within one test using a callable
+     *
+     * @param callable $callable
+     * @param string $exceptionClass
+     * @param int $exceptionCode
+     * @param string $exceptionMessage
+     */
+    public static function assertCallableThrowsException(callable $callable, $exceptionClass, $exceptionCode = null, $exceptionMessage = null)
+    {
+        try {
+            $callable();
+        } catch (\Exception $exception) {
+            Assert::assertInstanceOf($exceptionClass, $exception);
+
+            if ($exceptionCode !== null) {
+                Assert::assertEquals($exceptionCode, $exception->getCode());
+            }
+
+            if ($exceptionMessage !== null) {
+                Assert::assertContains($exceptionMessage, $exception->getMessage());
+            }
+
+            return;
+        }
+
+        Assert::fail('Expected ' . $exceptionClass . ' but no exception was thrown');
     }
 }
