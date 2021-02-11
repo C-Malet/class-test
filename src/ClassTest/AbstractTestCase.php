@@ -19,7 +19,9 @@ use Prophecy\Prophecy\ProphecyInterface;
  */
 abstract class AbstractTestCase extends TestCase
 {
-    use ProphecyTrait;
+    use ProphecyTrait {
+        prophesize as parentProphesize;
+    }
 
     const DEFAULT_PROPHECY = 0;
 
@@ -82,7 +84,7 @@ abstract class AbstractTestCase extends TestCase
      */
     protected function prophesize(?string $classOrInterface = null, int $prophecyDummyType = self::DEFAULT_PROPHECY): ObjectProphecy
     {
-        return $prophecyDummyType === self::DUMMY_PROPHECY ? parent::prophesize($classOrInterface) : $this->prophesizeDummy(
+        return $prophecyDummyType === self::DUMMY_PROPHECY ? $this->parentProphesize($classOrInterface) : $this->prophesizeDummy(
             $classOrInterface
         );
     }
@@ -97,7 +99,7 @@ abstract class AbstractTestCase extends TestCase
      */
     protected function prophesizeDummy(?string $class = null): ObjectProphecy
     {
-        $prophecy = parent::prophesize($class);
+        $prophecy = $this->parentProphesize($class);
         TestTools::setDummyProphecy($prophecy, $class);
 
         return $prophecy;
