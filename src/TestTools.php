@@ -63,7 +63,7 @@ class TestTools
     public static function getProphecyMethod(ObjectProphecy $prophecy, $methodName, $arguments = null, $return = null)
     {
         if ($arguments === null) {
-            $arguments = Argument::cetera();
+            $arguments = [Argument::cetera()];
         }
 
         $methodProphecies = $prophecy->getMethodProphecies($methodName);
@@ -75,7 +75,7 @@ class TestTools
             $methodProphecy = array_shift($methodProphecies);
         }
 
-        $methodProphecy->withArguments(new Argument\ArgumentsWildcard([$arguments]));
+        $methodProphecy->withArguments(new Argument\ArgumentsWildcard($arguments));
         if (!$methodProphecy->hasReturnVoid()) {
             $methodProphecy->willReturn($return);
         }
