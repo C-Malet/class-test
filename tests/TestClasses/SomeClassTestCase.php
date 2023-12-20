@@ -1,28 +1,29 @@
 <?php
 
-namespace Tests\ClassTest\TestClasses;
+namespace ClassTest\Tests\TestClasses;
 
-use ClassTest\ClassTest\ClassTestCase;
+use ClassTest\ClassTestCase;
 
 /**
  * Class SomeClassTestCase
+ *
+ * @template T of object
+ * @extends ClassTestCase<T>
  */
 class SomeClassTestCase extends ClassTestCase
 {
-    protected function getTestedClassName()
+    protected function getTestedClassName(): string
     {
         // Override in mock
         return '';
     }
 
-    protected function getTestedClassConstructorParameters()
+    /**
+     * @return array<mixed>
+     */
+    protected function getTestedClassConstructorParameters(): array
     {
         // Override in mock
         return [];
-    }
-
-    public function getTestedClass()
-    {
-        return parent::getTestedClass();
     }
 }

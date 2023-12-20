@@ -7,7 +7,4 @@ namespace ClassTest\Exception;
  *
  * @author Clement Malet
  */
-class ProphesizedObjectNotFoundException extends \RuntimeException
-{
-
-}
+class ProphesizedObjectNotFoundException extends \RuntimeException {}

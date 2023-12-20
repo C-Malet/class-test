@@ -1,4 +1,24 @@
-*.idea
-/composer.lock
-/vendor
-/phpunit.xml
+#~ Composer
+composer.phar
+composer.lock
+/vendor/
+
+#~ Tests
+/build/*
+.phpunit.result.cache
+.phpunit.cache
+tests/data/tmp/*
+!tests/data/tmp/.gitkeep
+tests/data/download/*
+!tests/data/download/.gitkeep
+
+#~ Misc
+.idea
+
+#~ Examples
+examples/download
+!examples/download/.gitkeep
+
+#~ Overridden condigs
+phpstan.neon
+phpunit.xml

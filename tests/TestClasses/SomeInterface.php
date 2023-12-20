@@ -1,11 +1,8 @@
 <?php
 
-namespace Tests\ClassTest\TestClasses;
+namespace ClassTest\Tests\TestClasses;
 
 /**
  * Interface SomeInterface
  */
-interface SomeInterface
-{
-
-}
+interface SomeInterface {}

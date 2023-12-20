@@ -1,9 +1,8 @@
 <?php
 
-namespace ClassTest\ClassTest;
+namespace ClassTest;
 
 use ClassTest\Exception\NotProphesizableException;
-use ClassTest\TestTools;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
@@ -13,6 +12,9 @@ use Prophecy\Prophecy\ObjectProphecy;
  * its mocked parameters to quickly set test actions on these mocks
  *
  * @author Clement Malet
+ *
+ * @template T of object
+ * @extends AbstractTestCase<T>
  */
 abstract class ClassTestCase extends AbstractTestCase
 {
@@ -23,24 +25,24 @@ abstract class ClassTestCase extends AbstractTestCase
      * How to use it :
      * ['SomeString' => ClassTestCase::STRING_PARAMETER]
      */
-    const STRING_PARAMETER = 'enforce_string_parameter';
+    public const STRING_PARAMETER = 'enforce_string_parameter';
 
-    /** @var $testedClass */
-    private $testedClass;
+    /** @var T $testedClass */
+    private object $testedClass;
 
     /**
-     * @return string The class name (::class) that is being tested and wished to be returned by
+     * @return class-string<T> The class name (::class) that is being tested and wished to be returned by
      *                the getTestedClass method
      */
-    abstract protected function getTestedClassName();
+    abstract protected function getTestedClassName(): string;
 
     /**
-     * @return array An ORDERED array of classes to be mocked (or values) that will be given as parameters to the
+     * @return array<mixed> An ORDERED array of classes to be mocked (or values) that will be given as parameters to the
      *               constructor of the tested class.
      * @see ClassTestCase::setUp to see how different types of parameters are handled
      *
      */
-    abstract protected function getTestedClassConstructorParameters();
+    abstract protected function getTestedClassConstructorParameters(): array;
 
     /**
      * Instantiate a clean class to use for tests, and stores its mocked parameters for re-use
@@ -51,8 +53,10 @@ abstract class ClassTestCase extends AbstractTestCase
      *  - A mock object, if so this mock is given to the class constructor, and the mock can be accessed with
      *    the getMockedParameter with the key of the value in the given array
      *  - Anything else, directly given as such to the class constructor
+     *
+     * @throws \ReflectionException
      */
-    public function setUp()
+    public function setUp(): void
     {
         $parameters = [];
         foreach ($this->getTestedClassConstructorParameters() as $parameterName => $parameter) {
@@ -69,6 +73,7 @@ abstract class ClassTestCase extends AbstractTestCase
             }
 
             try {
+                /** @var class-string<T> $parameter */
                 TestTools::assertIsProphesizable($parameter);
 
                 $prophecy = $this->prophesize($parameter, AbstractTestCase::DUMMY_PROPHECY);
@@ -85,9 +90,9 @@ abstract class ClassTestCase extends AbstractTestCase
     }
 
     /**
-     * @return object
+     * @return T
      */
-    protected function getTestedClass()
+    public function getTestedClass(): object
     {
         return $this->testedClass;
     }
